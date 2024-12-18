@@ -44,3 +44,39 @@ View(filtered_endpoints)
 
 endpoints_definition <- readRDS("endpoint_definitions.rds")
 View(endpoints_definition)
+
+#############################################################################
+# check if the `csid` columns are matched row by row
+# ensure `csid` column exists in both datasets
+# if `csid` entries are matched in both datasets, we can combine them directly
+#############################################################################
+
+if (!"csid" %in% colnames(endpoints) || !"csid" %in% colnames(gwas_genetics)) {
+  stop("The `csid` column is missing in one or both datasets.")
+}
+
+# ensure both datasets have the same number of rows
+if (nrow(endpoints) != nrow(gwas_genetics)) {
+  stop("The two datasets have different numbers of rows. Cannot compare row by row.")
+}
+
+# compare `csid` columns row by row
+csid_match <- endpoints$csid == gwas_genetics$csid
+
+# output the result
+if (all(csid_match, na.rm = TRUE)) {
+  cat("All rows in the `csid` columns are matched.\n")
+} else {
+  cat("There are mismatches in the `csid` columns.\n")
+
+  # identify and print mismatched rows
+  mismatched_rows <- which(!csid_match)
+  cat("Mismatched rows:\n")
+  print(mismatched_rows)
+
+  mismatched_values <- data.frame(
+    endpoints_csid = endpoints$csid[mismatched_rows],
+    gwas_genetics_csid = gwas_genetics$csid[mismatched_rows]
+  )
+  print(mismatched_values)
+}
