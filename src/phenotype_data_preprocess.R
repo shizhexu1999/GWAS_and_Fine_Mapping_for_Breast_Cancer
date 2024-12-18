@@ -80,3 +80,75 @@ if (nrow(extracted_baseline_questionnaires) != nrow(extracted_endpoints)) {
     print(mismatched_values)
   }
 }
+
+#######################################################################
+# replace the csid column in extracted_baseline_questionnaires.csv with its
+# corresponding ccvid column from gwas_genetics
+#######################################################################
+extracted_baseline_questionnaires <- read.csv("extracted_baseline_questionnaires.csv")
+gwas_genetics <- readRDS("data_gwas_genetics.rds")
+
+# check if both `csid` and `ccvid` columns exist in gwas_genetics
+if (!("csid" %in% colnames(gwas_genetics)) || !("ccvid" %in% colnames(gwas_genetics))) {
+  stop("The columns `csid` and/or `ccvid` are missing in gwas_genetics.")
+} else {
+  cat("Success: Both `csid` and `ccvid` columns are present in gwas_genetics.\n")
+}
+
+# merge `ccvid` from gwas_genetics into extracted_baseline_questionnaires using `csid`
+merged_data <- merge(
+  extracted_baseline_questionnaires,
+  gwas_genetics[, c("csid", "ccvid")],  # Keep only csid and ccvid for merging
+  by = "csid",  # Merge on the csid column
+  all.x = TRUE  # Retain all rows from extracted_baseline_questionnaires
+)
+
+# replace `csid` with `ccvid`
+merged_data$csid <- merged_data$ccvid
+colnames(merged_data)[colnames(merged_data) == "csid"] <- "FID"
+
+merged_data$IID <- merged_data$FID
+column_order <- c("FID", "IID", setdiff(colnames(merged_data), c("FID", "IID")))
+merged_data <- merged_data[, column_order]
+
+# remove the old `ccvid` column
+merged_data$ccvid <- NULL
+
+output_file <- "updated_baseline_questionnaires.csv"
+write.csv(merged_data, file = output_file, row.names = FALSE)
+cat("Updated baseline_questionnaires saved to:", output_file, "\n")
+
+####################################################################
+# run the similar steps for endpoints data
+####################################################################
+
+extracted_endpoints <- read.csv("extracted_endpoints.csv")
+gwas_genetics <- readRDS("data_gwas_genetics.rds")
+
+if (!("csid" %in% colnames(gwas_genetics)) || !("ccvid" %in% colnames(gwas_genetics))) {
+  stop("The columns `csid` and/or `ccvid` are missing in gwas_genetics.")
+} else {
+  cat("Success: Both `csid` and `ccvid` columns are present in gwas_genetics.\n")
+}
+
+merged_data <- merge(
+  extracted_endpoints,
+  gwas_genetics[, c("csid", "ccvid")],
+  by = "csid",
+  all.x = TRUE
+)
+
+merged_data$csid <- merged_data$ccvid
+colnames(merged_data)[colnames(merged_data) == "csid"] <- "FID"
+
+merged_data$IID <- merged_data$FID
+
+column_order <- c("FID", "IID", setdiff(colnames(merged_data), c("FID", "IID")))
+merged_data <- merged_data[, column_order]
+
+merged_data$ccvid <- NULL
+
+output_file <- "updated_extracted_endpoints.csv"
+write.csv(merged_data, file = output_file, row.names = FALSE)
+
+cat("Updated extracted_endpoints saved to:", output_file, "\n")
