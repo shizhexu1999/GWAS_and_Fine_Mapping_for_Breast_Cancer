@@ -181,7 +181,7 @@ output_file <- "women_only_combined_baseline_and_endpoints.csv"
 write.csv(filtered_data, file = output_file, row.names = FALSE)
 cat("Filtered data saved to:", output_file, "\n")
 
-filtered_data <- read.csv("filtered_combined_baseline_and_endpoints.csv")
+filtered_data <- read.csv("women_only_combined_baseline_and_endpoints.csv")
 
 columns_to_remove <- c(
   "region_code", "study_date", "study_date_year", "study_date_month", "study_date_day",
