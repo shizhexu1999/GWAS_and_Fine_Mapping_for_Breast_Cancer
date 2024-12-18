@@ -152,3 +152,70 @@ output_file <- "updated_extracted_endpoints.csv"
 write.csv(merged_data, file = output_file, row.names = FALSE)
 
 cat("Updated extracted_endpoints saved to:", output_file, "\n")
+
+####################################################################
+# combine updated_baseline_questionnaires.csv and updated_extracted_endpoints.csv
+####################################################################
+
+baseline_questionnaires <- read.csv("updated_baseline_questionnaires.csv")
+extracted_endpoints <- read.csv("updated_extracted_endpoints.csv")
+combined_data <- merge(
+  baseline_questionnaires,
+  extracted_endpoints,
+  by = c("FID", "IID"),
+  all = TRUE
+)
+combined_data <- combined_data[order(match(combined_data$FID, baseline_questionnaires$FID)), ]
+output_file <- "combined_baseline_and_endpoints.csv"
+write.csv(combined_data, file = output_file, row.names = FALSE)
+cat("Combined data saved to:", output_file, "\n")
+
+########################################################################
+# filter out the phenotype data for standard GWAS
+# we should filter the csv file directly before converting it into txt files
+########################################################################
+
+data <- read.csv("combined_baseline_and_endpoints.csv")
+filtered_data <- data[data$is_female != 0, ]
+output_file <- "women_only_combined_baseline_and_endpoints.csv"
+write.csv(filtered_data, file = output_file, row.names = FALSE)
+cat("Filtered data saved to:", output_file, "\n")
+
+filtered_data <- read.csv("filtered_combined_baseline_and_endpoints.csv")
+
+columns_to_remove <- c(
+  "region_code", "study_date", "study_date_year", "study_date_month", "study_date_day",
+  "study_date_hour", "study_date_time", "is_female", "dob_anon", "dob_y", "dob_m",
+  "dob_d_anon", "ep_diy_p1232015483_combined_datedeveloped", "ep_diy_p1232015483_da_datedeveloped",
+  "ep_diy_p1232015483_dis_datedeveloped", "ep_diy_p1232015483_du_datedeveloped",
+  "ep_diy_p1232015483_hiip_datedeveloped", "ep_diy_p1232015483_hiop_datedeveloped",
+  "ep_diy_p1232015483_icase_datedeveloped", "ep_diy_p1232015483_oa_datedeveloped",
+  "ep_diy_p1232015483_pvd_datedeveloped", "ep_diy_p1781594777_combined_datedeveloped",
+  "ep_diy_p1781594777_da_datedeveloped", "ep_diy_p1781594777_dis_datedeveloped",
+  "ep_diy_p1781594777_du_datedeveloped", "ep_diy_p1781594777_hiip_datedeveloped",
+  "ep_diy_p1781594777_hiop_datedeveloped", "ep_diy_p1781594777_icase_datedeveloped",
+  "ep_diy_p1781594777_oa_datedeveloped", "ep_diy_p1781594777_pvd_datedeveloped"
+)
+
+filtered_data <- filtered_data[, !(colnames(filtered_data) %in% columns_to_remove)]
+
+output_file <- "filtered_women_only_combined_baseline_and_endpoints.csv"
+write.csv(filtered_data, file = output_file, row.names = FALSE)
+cat("Final filtered data saved to:", output_file, "\n")
+
+data <- read.csv("filtered_women_only_combined_baseline_and_endpoints.csv")
+output_file <- "filtered_women_only_combined_baseline_and_endpoints.txt"
+write.table(
+  data,
+  file = output_file,
+  row.names = FALSE,  # Do not include row names
+  col.names = TRUE,   # Include column names
+  sep = " ",          # Use space as the delimiter
+  quote = FALSE       # Do not include quotes around values
+)
+cat("CSV file converted to space-delimited text file and saved to:", output_file, "\n")
+
+
+filtered_data <- read.csv("filtered_women_only_combined_baseline_and_endpoints.csv")
+non_na_count <- sum(!is.na(filtered_data$cancer_site))
+cat("Number of non-NA rows in cancer_site:", non_na_count, "\n")
