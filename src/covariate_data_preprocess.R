@@ -46,3 +46,26 @@ write.table(
   col.names = TRUE,  # Include column names
   quote = FALSE      # Avoid quotes around values
 )
+
+###############################################################################
+# With Christiana and Ahmed's suggestions, we want to add age, region code and
+# PCs for ancestry to the covariate file
+###############################################################################
+
+baseline_endpoints_file <- "combined_baseline_and_endpoints.csv"
+covariate_file <- "covariate_file_regenie.txt"
+output_file <- "updated_covariate_file_regenie.txt"
+
+
+baseline_endpoints <- read.csv(baseline_endpoints_file)
+covariates <- read.table(covariate_file, header = TRUE, stringsAsFactors = FALSE)
+
+
+merged_data <- covariates %>%
+  left_join(baseline_endpoints %>% select(FID, IID, region_code, age_at_study_date_x100),
+            by = c("FID", "IID"))
+
+
+write.table(merged_data, file = output_file, sep = "\t", row.names = FALSE, quote = FALSE)
+
+cat("Updated covariate file saved to", output_file, "\n")
