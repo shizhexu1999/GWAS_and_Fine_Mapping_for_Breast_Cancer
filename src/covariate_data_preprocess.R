@@ -11,6 +11,22 @@ file_path <- "data_gwas_genetics.rds"
 data <- readRDS(file_path)
 
 # filter rows where is_in_gwas_population_subset = 1 and is_in_gwas_unrelated_subset = 1
+# check which one excludes more
+# total_rows <- nrow(data)
+# count_population_subset_zero <- data %>%
+#   filter(is_in_gwas_population_subset == 0) %>%
+#   nrow()
+# count_unrelated_subset_zero <- data %>%
+#   filter(is_in_gwas_unrelated_subset == 0) %>%
+#   nrow()
+# count_both_zero <- data %>%
+#   filter(is_in_gwas_population_subset == 0, is_in_gwas_unrelated_subset == 0) %>%
+#   nrow()
+# cat("Total number of rows:", total_rows, "\n")
+# cat("Number of rows where is_in_gwas_population_subset == 0:", count_population_subset_zero, "\n")
+# cat("Number of rows where is_in_gwas_unrelated_subset == 0:", count_unrelated_subset_zero, "\n")
+# cat("Number of rows where both are 0:", count_both_zero, "\n")
+
 filtered_data <- data %>%
   filter(is_in_gwas_population_subset == 1, is_in_gwas_unrelated_subset == 1)
 
