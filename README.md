@@ -1,5 +1,5 @@
 **********************************************
-# **GWAS for CKB Breast Cancer**
+# **GWAS and Fine-mapping for CKB Breast Cancer**
 **********************************************
 
 ## Description
