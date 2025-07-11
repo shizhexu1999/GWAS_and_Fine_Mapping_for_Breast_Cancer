@@ -12,8 +12,12 @@ This repository contains code and scripts to uncover putative casual variants fo
 - We investigated the integration of fine-mapping with machine learning frameworks to enhance the identification of causal variants.
 
 ## GWAS for the Confluence Project
+The GWAS was conducted by using **REGENIE** and followed the pipeline suggested by the Confluence project. The details of the CKB dataset and the number of cases can found in [summaryreport] (summary_cases_confluence_13_May.pdf).
+
+## Fine-Mapping
 
 ## Next Step
+
 ## Acknowledgement
 The autocompletion feature of GitHub Copilot was passively used throughout the code development process. It is pervasive to all the code without the use of any specific prompts.
 
