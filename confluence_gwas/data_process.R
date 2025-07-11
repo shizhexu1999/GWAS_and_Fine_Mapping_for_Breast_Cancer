@@ -1,3 +1,21 @@
+"""
+GWAS Data Preparation and Cleaning Pipeline
+
+Description:
+This R script processes and cleans genotype, baseline, and endpoint data
+from the China Kadoorie Biobank (CKB) for genome-wide association studies (GWAS).
+It prepares covariate and phenotype files required for REGENIE analysis by:
+1. Cleaning genetic data to extract PCs and basic IDs.
+2. Extracting relevant endpoints and baseline questionnaire information.
+3. Merging datasets and formatting files according to REGENIE requirements.
+4. Filtering to include only female participants and excluding non-population subsets.
+
+Required R packages: dplyr, data.table
+Author: Shizhe Xu
+Date: 09 July 2025
+"""
+
+
 library(dplyr)
 
 ###############################################################################
