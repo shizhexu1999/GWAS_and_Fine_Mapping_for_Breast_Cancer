@@ -12,9 +12,12 @@ This repository contains code and scripts to uncover putative casual variants fo
 - We investigated the integration of fine-mapping with machine learning frameworks to enhance the identification of causal variants.
 
 ## GWAS for the Confluence Project
-The GWAS was conducted by using **REGENIE** and followed the pipeline suggested by the Confluence project. The details of the CKB dataset and the number of cases can found in [summaryreport] (summary_cases_confluence_13_May.pdf).
+The GWAS analysis was carried out with **REGENIE**, following the Confluence project’s recommended pipeline. The details of the CKB dataset and the number of cases can found in [summary report](summary_cases_confluence_13_May.pdf).
+
+To enable a robust comparison with **REGENIE**, we also applied another GWAS tool, **SAIGE**.
 
 ## Fine-Mapping
+Alongside applying established fine-mapping methods in our simulation study, we propose a new fine-mapping approach based on machine learning.
 
 ## Next Step
 
