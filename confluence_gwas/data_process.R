@@ -108,7 +108,7 @@ extracted_data <- baseline_questionnaires[, columns_to_extract, drop = FALSE]
 output_file <- "extracted_baseline_questionnaires.csv"
 write.csv(extracted_data, file = output_file, row.names = FALSE)
 
-# do some simple checkes
+# do some simple checks
 
 # extracted_baseline_questionnaires <- read.csv("extracted_baseline_questionnaires.csv")
 # extracted_endpoints <- read.csv("extracted_endpoints.csv")
@@ -256,7 +256,7 @@ cat("Updated covariate file saved to", output_file, "\n")
 
 ###############################################################################
 # Exclude the non-population subset for the above covariate file
-# generate the final covaraite file used for REGENIE
+# generate the final covariate file used for REGENIE
 ###############################################################################
 library(data.table)
 file_path = "covariate_file_regenie_with_subset.txt"
