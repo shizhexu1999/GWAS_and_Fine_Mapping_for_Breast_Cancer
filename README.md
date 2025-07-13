@@ -3,7 +3,7 @@
 **********************************************
 
 ## Summary
-This repository contains code and scripts to uncover putative casual variants for breast cancer through GWAS and fine-mapping.
+This repository contains code and scripts to uncover putative causal variants for breast cancer through GWAS and fine-mapping.
 
 ## Study Objectives
 - We conducted a GWAS analysis to identify genetic susceptibilities for overall breast cancer and its subtype (ER positive, ER negative and triple negative) using the China Kadoorie Biobank (CKB) dataset. The GWAS summary statistics will be contributed to the **Confluence** project, which is collaboration among breast cancer consortia to conduct the largest and most diverse breast cancer GWAS to date.
