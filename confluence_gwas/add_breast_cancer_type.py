@@ -323,3 +323,118 @@ print(f"Number of ER-positive cases (triple_negative_subtype == 1): {num_cases}"
 
 df_filtered.to_csv(output_file, sep="\t", index=False)
 print(f"Filtered and renamed file saved to: {output_file}")
+
+###############################################################################
+# Create a cross-tabulation of prevalent BC, C50, D05, has_subtype, ER+,
+# ER-, triple negative after exclusion for prior non-breast cancer
+###############################################################################
+phenotype_file = "final_phenotype_file.txt"
+ccvid_file = "DAR-2025-00079.breast_filtered_header_classification_ccvid.csv"
+
+pheno_df = pd.read_csv(phenotype_file, sep="\t")
+csv_df = pd.read_csv(ccvid_file)
+
+selected_columns = csv_df[
+    ["ccvid", "is_er_positive_or_borderline", "is_er_negative", "is_triple_negative"]
+]
+merged_df = pheno_df.merge(
+    selected_columns, how="left", left_on="FID", right_on="ccvid"
+)
+merged_df.drop(columns=["ccvid"], inplace=True)
+
+ccvid_set = set(csv_df["ccvid"].astype(str))
+
+merged_df["has_subtype"] = (
+    merged_df["FID"].astype(str).apply(lambda x: 1 if x in ccvid_set else 0)
+)
+
+columns_to_keep = [
+    "FID",
+    "IID",
+    "breast_cancer_prevalent",
+    "ep_diy_p1232015483_combined_ep",
+    "ep_diy_p1781594777_combined_ep",
+    "is_er_positive_or_borderline",
+    "is_er_negative",
+    "is_triple_negative",
+    "has_subtype",
+]
+
+subset_df = merged_df[columns_to_keep].copy()
+
+for col in columns_to_keep[2:]:
+    subset_df[col] = subset_df[col].apply(lambda x: 1 if str(x) in ["1", "1.0"] else 0)
+
+subset_df.rename(
+    columns={
+        "ep_diy_p1232015483_combined_ep": "C50",
+        "ep_diy_p1781594777_combined_ep": "D05",
+        "is_er_positive_or_borderline": "ER+",
+        "is_er_negative": "ER-",
+        "is_triple_negative": "triple_negative",
+    },
+    inplace=True,
+)
+
+output_file = "final_phenotype_file_with_selected_columns_after_exclusion.txt"
+subset_df.to_csv(output_file, sep="\t", index=False)
+
+print(f"Updated file saved to: {output_file}")
+
+###############################################################################
+# Create a cross-tabulation of prevalent BC, C50, D05, has_subtype, ER+,
+# ER-, triple negative before exclusion for prior non-breast cancer
+###############################################################################
+phenotype_file = "phenotype_file_without_other_cancer_before_study.txt"
+ccvid_file = "DAR-2025-00079.breast_filtered_header_classification_ccvid.csv"
+
+pheno_df = pd.read_csv(phenotype_file, sep="\t")
+csv_df = pd.read_csv(ccvid_file)
+
+selected_columns = csv_df[
+    ["ccvid", "is_er_positive_or_borderline", "is_er_negative", "is_triple_negative"]
+]
+
+merged_df = pheno_df.merge(
+    selected_columns, how="left", left_on="FID", right_on="ccvid"
+)
+merged_df.drop(columns=["ccvid"], inplace=True)
+
+ccvid_set = set(csv_df["ccvid"].astype(str))
+merged_df["has_subtype"] = (
+    merged_df["FID"].astype(str).apply(lambda x: 1 if x in ccvid_set else 0)
+)
+
+
+columns_to_keep = [
+    "FID",
+    "IID",
+    "breast_cancer_prevalent",
+    "ep_diy_p1232015483_combined_ep",
+    "ep_diy_p1781594777_combined_ep",
+    "is_er_positive_or_borderline",
+    "is_er_negative",
+    "is_triple_negative",
+    "has_subtype",
+]
+
+subset_df = merged_df[columns_to_keep].copy()
+
+for col in columns_to_keep[2:]:
+    subset_df[col] = subset_df[col].apply(lambda x: 1 if str(x) in ["1", "1.0"] else 0)
+
+subset_df.rename(
+    columns={
+        "ep_diy_p1232015483_combined_ep": "C50",
+        "ep_diy_p1781594777_combined_ep": "D05",
+        "is_er_positive_or_borderline": "ER+",
+        "is_er_negative": "ER-",
+        "is_triple_negative": "triple_negative",
+    },
+    inplace=True,
+)
+
+output_file = "final_phenotype_file_with_selected_columns_before_exclusion.txt"
+subset_df.to_csv(output_file, sep="\t", index=False)
+
+print(f"Updated file saved to: {output_file}")
